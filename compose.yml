@@ -1,0 +1,26 @@
+version: '3'
+
+volumes:
+  postgres_data: {}
+
+services:
+  fastapi:
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+
+    image: test_project_fastapi
+    depends_on:
+      - postgres
+    env_file:
+      - ./.env
+    command: uvicorn app.main:app --host 0.0.0.0 --port 5000
+    ports:
+    - "5000:5000"
+
+  postgres:
+    image: postgres:15
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    env_file:
+      - ./.env
